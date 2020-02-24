@@ -8,6 +8,8 @@
 
 #ifndef HASHTABLE_H
 #define HASHTABLE_H
+//custom hashtable using my custom AVL tree class 
+//also used in search engine program to store documents
 
 using namespace std;
 
@@ -30,20 +32,24 @@ private:
 
 };
 
+//default constructor
 template<typename T, typename U>
 HashTable<T,U>::HashTable(){
 
 }
+
+//destuctor, just lets AVL destructor delete everything
 template<typename T, typename U>
 HashTable<T,U>::~HashTable(){
 
 }
 
+//find where to insert using hash function and insert into the table
 template<typename T, typename U>
 void HashTable<T,U>::insertHash(T x, U y) {
     hash<U>temp2; //hash and insert at the location
     int index = temp2(y) % htsize;
-    arr[index].insert(x);
+    arr[index].insert(x); //calls the AVL tree insert function
 
 }
 
@@ -57,21 +63,24 @@ T& HashTable<T,U>::find(T& x)  {
     return node->getElement();
 }
 
+//return the size of the table
 template <typename T,typename U>
 int HashTable<T,U>::getSize() {
     return htsize;
 }
 
+//returns the table
 template <typename T, typename U>
 AVL<T>* HashTable<T,U>::getArr() {
     return arr;
 }
 
+//make empty function
 template<typename T, typename U>
 void HashTable<T,U>::makeEmpty(){
 
     for(int i = 0; i <htsize;i++){
-        arr[i].makeEmpty();
+        arr[i].makeEmpty(); //calls the AVL tree make empty funciton for every tree in the table
 
     }
 }
