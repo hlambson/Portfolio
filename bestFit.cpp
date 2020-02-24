@@ -8,10 +8,17 @@
 #include <algorithm>
 #include <iterator>
 using namespace std;
+//This is an algorithm for allocating memory at the location that fits it best that I wrote for a program in my Algorithms class.
+//The program was to create a custom memory manager using different strategies of allocation, one of them being best fit
+
+//The book variable is a vector of objects that keeps track of what memory has already been allocated 
+//The objects in the vector have void* of what is allocated's initial and final memory address
+
+
 bestFit::bestFit() {}
 
 void* bestFit::giveMem(size_t a) {
-    if (book.size() == 0) { //if the bookkeeping vector is empty, store at the first location
+    if (book.empty()) { //if the bookkeeping vector is empty, store at the first location
         storage temp;
         temp.setInit(initial);
         temp.setSize(a);
@@ -84,11 +91,10 @@ void* bestFit::giveMem(size_t a) {
     return nullptr; //this should never happen
 }
 
+//method to deallocate memory, essentially just removes it from the vector to be written over later
 void bestFit::takeMem(void * ptr) {
-    storage temp;
     for (int x = 0; x < book.size(); x++) {
-        temp = book[x];
-        if (temp.getInit() == ptr) {
+        if (book[x].getInit() == ptr) {
             book.erase(book.begin() + x);
         }
     }
