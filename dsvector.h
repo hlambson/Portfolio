@@ -1,6 +1,8 @@
 #ifndef DSVECTOR_H
 #define DSVECTOR_H
 #include <iostream>
+//templated custom vector class written for my Data Structures class
+
 template <typename t>
 class DSVector {
 
@@ -58,7 +60,7 @@ t& DSVector<t>::operator[](const int index) {
     return arr[index];
 }
 
-//overloaded = operator
+//overloaded assignment
 template <typename t>
 DSVector<t>& DSVector<t>::operator=(const DSVector<t>& vect) {
     this->capacity = vect.getCapacity();
@@ -78,7 +80,7 @@ int DSVector<t>::getCapacity() {
     return this->capacity;
 }
 
-//double the capacity and allocate new memory for it
+//double the capacity and allocate new memory for it. Allows for the vector to get bigger when its capacity has been reached
 template <typename t> 
 void DSVector<t>::resize() {
     capacity *= 2;
@@ -93,14 +95,14 @@ void DSVector<t>::resize() {
 //push values back into the array
 template <typename t>
 void DSVector<t>::push_back(const t value) {
-    if (this->size == this-> capacity) {
+    if (this->size == this-> capacity) { //check if the vector needs more space
         resize();
     }
     this->arr[size] = value;
     size++;
 }
 
-//reduce the size by one
+//reduce the size by one, essentially popping the last value out of the vector
 template <typename t>
 void DSVector<t>::pop_back() {
     size = size - 1;
