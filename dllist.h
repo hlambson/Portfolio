@@ -1,6 +1,8 @@
 #ifndef DLLIST_H
 #define DLLIST_H
 #include "listnode.h"
+//templated custom doubly linked list class written for my Data Structures class
+
 template <typename T>
 class DLList {
 private:
@@ -96,6 +98,7 @@ ListNode<T>* DLList<T>::getCurrent() {
     return current;
 }
 
+//return a node at a specific index
 template <typename T>
 ListNode<T>* DLList<T>::searchingIterator(int index) {
     ListNode<T>* tempIterator = head;
@@ -137,7 +140,7 @@ void DLList<T>::resetCurrent() {
     current = head;
 }
 
-//add a node to the fron of the list
+//add a node to the front of the list
 template <typename T>
 void DLList<T>::push_front(const T x) {
     if (head == nullptr) {
@@ -198,6 +201,7 @@ void DLList<T>::pop_back() {
     }
 }
 
+//return the size of the list
 template <typename T>
 int DLList<T>::getSize() {
     return size;
