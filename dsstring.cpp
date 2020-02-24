@@ -1,13 +1,18 @@
 #include "dsstring.h"
 #include <iostream>
 #include <cstring>
+//custom string class made for my Data Structures class
+
 
 using namespace std;
+
+//default contructor
 DSString::DSString() {
     data = nullptr;
     length = 0;
 }
 
+//contructor that takes a char*
 DSString::DSString(const char* d) {
    length = strlen(d);
     data = new char[length + 1];
@@ -15,17 +20,19 @@ DSString::DSString(const char* d) {
     strcpy(data,d);
 }
 
+//copy constructor
 DSString::DSString(const DSString& d) {
    length = strlen(d.data);
     data = new char[length + 1];
     strcpy(data,d.data);
 }
 
-
+//destructor
 DSString::~DSString() {
     delete[] data;
 }
 
+//overloaded assignment with char*
 DSString& DSString::operator= (const char* d) {
     length = strlen(d);
     if (data != nullptr) {
@@ -36,7 +43,7 @@ DSString& DSString::operator= (const char* d) {
     return *this;                                                  //return the new string
 }
 
-
+//overloaded assignment with DSString
 DSString& DSString::operator=(const DSString& p) {
     length = strlen(p.data);
     this->data = new char[length + 1];                     //allowcate new memory for the new length of the string
@@ -44,6 +51,7 @@ DSString& DSString::operator=(const DSString& p) {
     return *this;                                                  //return the new string
 }
 
+//overloaded +
 DSString DSString::operator+(const DSString& p) {
 
     length += strlen(p.data);
@@ -51,6 +59,7 @@ DSString DSString::operator+(const DSString& p) {
     return *this;
 }
 
+//overloaded +=
 DSString& DSString::operator+=(const DSString& p) {
     char* temp = this->data;
     int tempLength = strlen(temp);
@@ -62,7 +71,7 @@ DSString& DSString::operator+=(const DSString& p) {
     return *this;
 }
 
-
+//overloaded == with char*
 bool DSString::operator== (const char* p) {
     if (strcmp(this->data,p) == 0) {
         return true;
@@ -72,6 +81,7 @@ bool DSString::operator== (const char* p) {
     }
 }
 
+//overloaded == with DSString
 bool DSString::operator== (const DSString& p) {
     if (strcmp(this->data,p.data) == 0) {
         return true;
@@ -81,6 +91,7 @@ bool DSString::operator== (const DSString& p) {
     }
 }
 
+//overloaded < with char*
 bool DSString::operator< (const char* p) {
     if (strcmp(this->data,p) < 0) {
         return true;
@@ -90,6 +101,7 @@ bool DSString::operator< (const char* p) {
     }
 }
 
+//overloaded < with DSString
 bool DSString::operator< (const DSString& p) {
     if (strcmp(this->data,p.data) < 0) {
         return true;
@@ -99,15 +111,17 @@ bool DSString::operator< (const DSString& p) {
     }
 }
 
-
+//overloaded index
 char& DSString::operator[] (const int num) {
     return this->data[num];
 }
+
 
 int DSString::size() {
     return length;
 }
 
+//substring function
 DSString DSString::substring(int a, int b) {
   char* temp;
   int size = b;
@@ -135,10 +149,13 @@ DSString DSString::substring(int a, int b) {
   return sub;
 
 }
+
+//to c_str
 char* DSString::c_str() {
         return this->data;
 }
 
+//overloaded << operator
 std::ostream& operator<< (std::ostream& stream, const DSString& d) {
     for (int x = 0; x < d.length; x++) {
    stream << d.data[x];
