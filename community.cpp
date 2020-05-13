@@ -1,7 +1,7 @@
 //
 // Created by henry on 3/2/2020.
 //
-
+//Girvan-Newman Algorithm
 #include "community.h"
 #include <fstream>
 #include <iostream>
@@ -18,119 +18,8 @@ community::~community() {
 
 }
 
-void community::readInPaths(string l) {
-    ifstream file;
-    file.open(l);
-    if (!file.is_open()) {
-        cout << "error, path file didnt open" << endl;
-    }
-    char* buffer = new char[500]; //get number
-    file.getline(buffer,500);
-    buffer = strtok(buffer, "[]");
-    int num = atoi(buffer);
-    int x = 0;
-    string line;
-    string line2;
-    while (x < num) {
-        getline(file,line);
-        storage<string> tempObj(line);
-        paths.insert(line,tempObj); //insert into map
-        node tempNode(line);
-        nodes.push_back(tempNode); //put the nodes in the vector
-        x++;
-    }
-    file.getline(buffer,50); //get the line that tells what type of graph it is
-    buffer = strtok(buffer, "[]");
-    bool directed = false;
-    if (strcmp(buffer,"directed") == 0) {
-        directed = true;
-    }
-    while(!file.eof()) {
-        file >> line; //get the starting node
-        file >> line2; //get rid of the dash
-        file.getline(buffer, 50); //get the ending node
-        buffer = strtok(buffer, " ");
-        line2 = buffer;
-        storage<string> temp(line, line2); //make a temp storage object
-        edge tempEdge(line,line2);
-        total.push_back(tempEdge);
-        paths.insert(line,temp); //and insert into the map
-        if (directed == false) {
-            storage<string> temp2(line2,line);
-            paths.insert(line2, temp2);
-        }
-    }
-}
 
-vector<edge> community::bfs(string start) {
-    vector<edge> edges;
-    int i = 2; //counter variable
-    queue<string> list;
-    for (int x = 0; x < nodes.size(); x++) {
-        nodes[x].setVal(0); //reset all node values to 0
-        if (nodes[x].getName() == start) {
-            nodes[x].setVal(1); //set the value of the starting node to 1
-            list.push(nodes[x].getName()); //push the starting node onto the queue
-        }
-    }
-    while (!list.empty()) {
-        string key = list.front(); //store the front value in the queue
-        list.pop(); //then pop it off
-        auto itr = paths.find(key);
-        storage<string> temp = itr->second;
-        for (int x = 0; x < temp.getConnections().size(); x++) {
-            for (int y = 0; y < nodes.size(); y++) {
-                if (temp.getConnections()[x] == nodes[y].getName()) {
-                    if (nodes[y].getVal() == 0) {//set the value for the nodes connected to the current node if they arent set alreadu
-                        nodes[y].setVal(i);
-                        i++;
-                        list.push(nodes[y].getName()); //queue the next node
-                        edge tempEdge(key,nodes[y].getName());
-                        edges.push_back(tempEdge); //push back the found edge
-                    }
-                }
-            } //end inner for
-        }// end outer for
-    }// end while
-
-    return edges;
-}
-
-vector<edge> community::dfs(string start) {
-    vector<edge> edges;
-    int i = 2; //counter variable
-    stack<string> list;
-    for (int x = 0; x < nodes.size(); x++) {
-        nodes[x].setVal(0); //reset all node values to 0
-        if (nodes[x].getName() == start) {
-            nodes[x].setVal(1); //set the value of the starting node to 1
-            list.push(nodes[x].getName()); //push the starting node onto the stack
-        }
-    }
-    while (!list.empty()) {
-        string key = list.top(); //store the front value in the queue
-        list.pop(); //then pop it off
-        auto itr = paths.find(key);
-        storage<string> temp = itr->second;
-        for (int x = 0; x < temp.getConnections().size(); x++) {
-            for (int y = 0; y < nodes.size(); y++) {
-                if (temp.getConnections()[x] == nodes[y].getName()) {
-                    if (nodes[y].getVal() == 0) {//set the value for the nodes connected to the current node if they arent set alreadu
-                        nodes[y].setVal(i);
-                        i++;
-                        list.push(nodes[y].getName()); //push the next node
-                        edge tempEdge(key,nodes[y].getName());
-                        edges.push_back(tempEdge); //push back the found edge
-                    }
-                }
-            } //end inner for
-        }// end outer for
-    }// end while
-
-    return edges;
-}
-
-vector<edge> community::bfsModified(string start) {
+vector<edge> community::bfsModified(string start) { //breadth first search
     vector<edge> edges;
     vector<node*> pointers;
     for (int x = 0; x < nodes.size(); x++) {
@@ -201,88 +90,6 @@ vector<edge> community::bfsModified(string start) {
         nodes.push_back(*pointers[x]);
     }
     return edges;
-}
-
-stack<edge> community::makeConnection(string start, string end) {
-    vector<edge> edges = bfs(start);
-    stack<edge> currPath;
-    vector<edge> options;
-    for (int x = 0; x < edges.size(); x++) { //if the starting node has multiple edges attached to it
-        if (edges[x].getName1() == start) {
-            options.push_back(edges[x]);
-        }
-    }
-
-    edge current;
-    edge previous;
-    int x = 0;
-    bool check;
-    for (int index = 0; index < options.size(); index++) { //backtracking to find all the paths to the end node
-        currPath.push(options[index]);
-        while (!currPath.empty()) {
-                x = 0;
-            if (currPath.top() == current) {
-                previous = currPath.top();
-                currPath.pop();
-            }
-            else {
-                if (currPath.top().getName2() == end) { //if the first edge leads to the end node
-                    return currPath;
-                } else {
-                    current = currPath.top();
-                    while (x < edges.size()) {
-                        check = false;
-                        if (currPath.top().getName2() == edges[x].getName1() && edges[x] != previous) { //check if the edges connect and make sure it doesnt add what was just popped off
-                            currPath.push(edges[x]);
-                            if (currPath.top().getName2() == end) { //check if what was added is the end node and push the path if it is
-                                return currPath;
-                            }
-                            x = 0;
-                            check = true;
-                        }
-                        if (check == false) {
-                            x++;
-                        }
-                    } //end inner while
-                    previous = currPath.top();
-                    currPath.pop();
-                }
-            }
-        } //end outer while
-    }//end for
-    return currPath;
-}
-
-void community::printConnection(string start, string end) {
-    stack<edge> path = makeConnection(start,end);
-
-    if (path.empty()) {
-        output << "Could not find a path for those nodes. Maybe try a different pair of nodes?" << endl;
-    }
-    else {
-        stack<edge> reverse;
-        int size = path.size();
-        for (int x = 0; x < size; x++) { //reverse the stack
-            reverse.push(path.top());
-            path.pop();
-        }
-        size = reverse.size();
-        output << "{";
-        for (int x = 0; x < size; x++) { //print out the path
-            if (x == size - 1) {
-                output << "(" << reverse.top().getName1() << "," << reverse.top().getName2() << ")}";
-            } else {
-                output << "(";
-                output << reverse.top().getName1() << ",";
-                output << reverse.top().getName2() << "), ";
-
-            }
-            reverse.pop();
-
-        }
-        output << endl;
-    }
-    output << endl;
 }
 
 void community::discoverCommunities() {
@@ -391,63 +198,4 @@ void community::removeEdges() {
         x++;
     }
 
-}
-
-void community::control(char* f) {
-    ifstream file;
-    file.open(f);
-    if (!file.is_open()) {
-        cout << "control file didnt open" << endl;
-    }
-    string buffer;
-    char* line = new char[500];
-    while(!file.eof()) {
-        file >> buffer;
-
-        if (buffer == "or") {
-
-            file.getline(line,500);
-            line = line + 1;
-            readInPaths(line);
-        }
-        if (buffer == "ow") {
-            file.getline(line,500);
-            line = line + 1;
-            output.open(line);
-            if(!output.is_open()) {
-                cout << "output didnt open " << endl;
-            }
-        }
-        if (buffer == "dfs") {
-            file.getline(line,500);
-            line = line + 1;
-            vector<edge> depth = dfs(line);
-            output << "DEPTH" << endl;
-            for (int x = 0; x < depth.size(); x++) {
-                output << depth[x].getName1() << " - " << depth[x].getName2() << endl;
-            }
-            output << endl;
-
-        }
-        if (buffer == "bfs") {
-            file.getline(line,500);
-            line = line + 1;
-            vector<edge> breadth = bfs(line);
-            output << "BREADTH" << endl;
-            for (int x = 0; x < breadth.size(); x++) {
-                output << breadth[x].getName1() << " - " << breadth[x].getName2() << endl;
-            }
-            output << endl;
-        }
-        if (buffer == "mc") {
-            char* line2 = new char[500];
-            file >> line;
-            file.getline(line2,500);
-            line2 = line2 + 1;
-            printConnection(line, line2);
-        }
-        if (buffer == "dc") {
-            removeEdges();
-        }
-    }
 }
