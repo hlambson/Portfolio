@@ -1,6 +1,6 @@
 # Portfolio
 Code Samples for Job Applications.
-All code is written in C++
+All code is written in C++.
 
 Code taken from programs written for Data Structures class and Algorithms class.
 
