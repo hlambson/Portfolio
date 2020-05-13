@@ -1,5 +1,6 @@
 # Portfolio
-Samples of Code for Job Applications
+Code Samples for Job Applications.
+All code is written in C++
 
 Code taken from programs written for Data Structures class and Algorithms class.
 
