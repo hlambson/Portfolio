@@ -9,7 +9,7 @@
 #ifndef HASHTABLE_H
 #define HASHTABLE_H
 //custom hashtable using my custom AVL tree class 
-//also used in search engine program to store documents
+
 
 using namespace std;
 
