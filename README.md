@@ -8,4 +8,4 @@ Data Structures: DSString, DSVector, AVL tree, hashtable
 
 Algorithms: Best Fit, Girvan-Newman, Disjoint Set, Kruskal's Algorithm, Travelling Salesman
 
-Machine Learning: MultiLayerPerceptron (if the file does not load, just try reloading it for some reason github does not like jupytr notebook files)
+Machine Learning: MultiLayerPerceptron (if the file does not load, just try reloading it for some reason github does not like jupyter notebook files)
