@@ -8,7 +8,7 @@ Data Structures: DSString, DSVector, AVL tree, hashtable
 
 Algorithms: Best Fit, Girvan-Newman, Disjoint Set, Kruskal's Algorithm, Travelling Salesman
 
-Machine Learning: MultiLayerPerceptron, Wide and Deep Network 
+Machine Learning: MultiLayerPerceptron, Wide and Deep Network, Multi Task Neural Network 
 
 Artificial Intelligence: n-queens, maze
 
